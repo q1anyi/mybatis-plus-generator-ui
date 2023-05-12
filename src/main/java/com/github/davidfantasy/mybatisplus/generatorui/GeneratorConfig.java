@@ -1,6 +1,5 @@
 package com.github.davidfantasy.mybatisplus.generatorui;
 
-import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.config.ITypeConvert;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
@@ -8,8 +7,6 @@ import com.github.davidfantasy.mybatisplus.generatorui.mbp.NameConverter;
 import com.github.davidfantasy.mybatisplus.generatorui.mbp.TemplateVaribleInjecter;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.Objects;
 
 @Builder
 @Data
@@ -24,6 +21,11 @@ public class GeneratorConfig {
      * 生成的文件所保存的包路径
      */
     private String basePackage = "generatorui.default";
+
+    /**
+     * 模版和配置json保存位置
+     */
+    private String configPath;
 
     /**
      * 数据库地址

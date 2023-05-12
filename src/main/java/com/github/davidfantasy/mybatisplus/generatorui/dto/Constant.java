@@ -8,6 +8,8 @@ public class Constant {
 
     public final static String CONFIG_HOME = ".mybatis-plus-generator-ui";
 
+    public final static String PROJECT_CONFIG_HOME = "mpguconfig";
+    
     public final static String TEMPLATE_STORE_DIR = "template";
 
     public final static String RESOURCE_PREFIX_CLASSPATH = "classpath:";

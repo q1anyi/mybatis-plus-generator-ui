@@ -77,10 +77,11 @@ public class ${entity} {
     <%
     /*主键*/
     %>
-        <% if(field.keyIdentityFlag){ %>
-    @TableId(value = "${field.annotationColumnName}", type = IdType.AUTO)
-        <% }else if(isNotEmpty(idType)){ %>
+
+        <% if(isNotEmpty(idType)){ %>
     @TableId(value = "${field.annotationColumnName}", type = IdType.${idType})
+        <% }else if(field.keyIdentityFlag){ %>
+    @TableId(value = "${field.annotationColumnName}", type = IdType.AUTO)
         <% }else if(field.convert){ %>
     @TableId("${field.annotationColumnName}")
          <% } %>
