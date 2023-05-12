@@ -2,6 +2,7 @@ package com.github.davidfantasy.mybatisplus.generatorui.service;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import com.github.davidfantasy.mybatisplus.generatorui.GeneratorConfig;
 import com.github.davidfantasy.mybatisplus.generatorui.ProjectPathResolver;
 import com.github.davidfantasy.mybatisplus.generatorui.common.ServiceException;
@@ -44,7 +45,11 @@ public class UserConfigStore {
 
     @PostConstruct
     public void init() {
-        this.storeDir = PathUtil.joinPath(System.getProperty("user.home"), CONFIG_HOME, generatorConfig.getBasePackage());
+        if (StrUtil.isNotBlank(generatorConfig.getConfigPath())) {
+            this.storeDir = PathUtil.joinPath(generatorConfig.getConfigPath(), PROJECT_CONFIG_HOME);
+        } else {
+            this.storeDir = PathUtil.joinPath(System.getProperty("user.home"), CONFIG_HOME, generatorConfig.getBasePackage());
+        }
         this.userConfigPath = this.storeDir + File.separator + "user-config.json";
     }
 
@@ -112,7 +117,15 @@ public class UserConfigStore {
     }
 
     public void importProjectConfig(String sourcePkg) throws IOException {
-        String configHomePath = PathUtil.joinPath(System.getProperty("user.home"), CONFIG_HOME);
+        String configHomePath = "";
+        String configPath = "";
+        if (StrUtil.isNotBlank(generatorConfig.getConfigPath())) {
+            configPath = generatorConfig.getConfigPath();
+            configHomePath = PathUtil.joinPath(configPath, PROJECT_CONFIG_HOME);
+        } else {
+            configPath = System.getProperty("user.home");
+            configHomePath = PathUtil.joinPath(configPath, CONFIG_HOME);
+        }
         if (!FileUtil.exist(configHomePath)) {
             throw new ServiceException("配置主目录不存在：" + configHomePath);
         }
@@ -129,7 +142,7 @@ public class UserConfigStore {
         if (!flag) {
             throw new ServiceException("未找到待导入的源项目配置");
         }
-        String sourceProjectConfigPath = PathUtil.joinPath(System.getProperty("user.home"), CONFIG_HOME, sourcePkg);
+        String sourceProjectConfigPath = PathUtil.joinPath(configPath, CONFIG_HOME, sourcePkg);
         String targetProjectConfigPath = this.storeDir;
         UserConfig currentUserConfig = new UserConfig();
         currentUserConfig.setOutputFiles(getBuiltInFileInfo());
@@ -138,7 +151,12 @@ public class UserConfigStore {
     }
 
     public List<String> getAllSavedProject() {
-        String configHomePath = PathUtil.joinPath(System.getProperty("user.home"), CONFIG_HOME);
+        String configHomePath = "";
+        if (StrUtil.isNotBlank(generatorConfig.getConfigPath())) {
+            configHomePath = PathUtil.joinPath(generatorConfig.getConfigPath(), PROJECT_CONFIG_HOME);
+        } else {
+            configHomePath = PathUtil.joinPath(System.getProperty("user.home"), CONFIG_HOME);
+        }
         if (!FileUtil.exist(configHomePath)) {
             return Collections.emptyList();
         }

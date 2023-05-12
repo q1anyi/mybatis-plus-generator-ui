@@ -1,5 +1,6 @@
 package ${package.ServiceImpl};
 
+
 import ${package.Entity}.${entity};
 import ${package.Mapper}.${table.mapperName};
 <% if(table.serviceInterface){ %>
@@ -7,6 +8,14 @@ import ${package.Service}.${table.serviceName};
 <% } %>
 import ${superServiceImplClassPackage};
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import com.aochensoft.common.core.constant.AochenConstant;
+import com.aochensoft.mybatis.mybatis.core.util.SortUtil;
+import com.aochensoft.framework.util.page.QueryRequest;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
  * <p>
@@ -16,7 +25,9 @@ import org.springframework.stereotype.Service;
  * @author ${author}
  * @since ${date}
  */
+@Slf4j
 @Service
+@RequiredArgsConstructor
 <% if(kotlin){ %>
 open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperName}, ${entity}>()<% if(table.serviceInterface){ %>, ${table.serviceName}<% } %> {
 
@@ -24,5 +35,13 @@ open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperNam
 <% }else{ %>
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}><% if(table.serviceInterface){ %> implements ${table.serviceName}<% } %> {
 
+    @Override
+    public IPage<${entity}> getPage(QueryRequest queryRequest) {
+        Page<${entity}> page = new Page<>();
+        SortUtil.handlePageSort(queryRequest, page, AochenConstant.DEFAULT_ORDER_FILED, AochenConstant.ORDER_DESC, false);
+        LambdaQueryWrapper<${entity}> queryWrapper = new LambdaQueryWrapper<>();
+        // TODO 查询条件
+        return baseMapper.selectPage(page, queryWrapper);
+    }
 }
 <% } %>
