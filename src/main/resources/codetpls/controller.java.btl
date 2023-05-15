@@ -84,6 +84,7 @@ public class ${table.controllerName} {
     <% } %>
 
     <% if(isNotEmpty(controllerMethods.delete)){ %>
+     @ApiOperation(value = "删除${table.comment!} ", notes = "删除${table.comment!} ")
     @PostMapping(value = "/{ids}")
     public Result<Object> delete(@PathVariable("ids") String[] ids) {
         boolean flag = ${serviceInstanceName}.removeByIds(Arrays.asList(ids));
